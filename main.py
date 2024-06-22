@@ -17,11 +17,13 @@ class MyClient(discord.Client):
             match params[0]:
                 case "-screams": 
                     try:
-                        scream_count = DBD.get_player_screams(params[0])
-                        await message.channel.send("Yikes! You've screamed", scream_count, "times!")
+                        player_id = params[1]
+                        scream_count = DBD.get_player_screams(player_id)
+
+                        await message.channel.send("Yikes! You've screamed " + str(scream_count) + " times! :scream:")
 
                     except ValueError:
-                        await message.channel.send("Player", params[0], "not found!")
+                        await message.channel.send("Player ID: " + player_id + " not found!")
                     
                 case _: 
                     return
