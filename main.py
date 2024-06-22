@@ -26,7 +26,7 @@ class MyClient(discord.Client):
                         player_id = STEAM.get_steam_id_64(vanity_url)
                         scream_count = DBD.get_player_screams(player_id)
 
-                        await message.channel.send("Yikes! You've screamed " + str(scream_count) + " times! :scream:")
+                        await message.channel.send("Yikes! " + vanity_url + " has screamed " + str(scream_count) + " times! :scream:")
 
                     except ValueError:
                         await message.channel.send("Player: " + vanity_url + " not found!")
