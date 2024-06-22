@@ -1,9 +1,13 @@
 import discord
 import os
+from dbd import DbdApi
+
+DBD = None
 
 class MyClient(discord.Client):
     async def on_ready(self):
-        print(f'Logged on as {self.user}!')
+        print(f'Logged on as {self.user}!') 
+        DBD = DbdApi()
 
     async def on_message(self, message):
         print(f'Message from {message.author}: {message.content}')
