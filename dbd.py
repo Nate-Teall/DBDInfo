@@ -14,8 +14,10 @@ class DbdApi:
     def get_player_screams(self, player_id):
         response = requests.get(self.DBD_URL + "playerstats?steamid=" + player_id)
 
+        # Keeping this try response in case a player exists, but has not played DBD
         if response.status_code == 404:
-            raise ValueError("Error: User", player_id, "not found.") 
+            print("Error: User", player_id, "not found. They likely have not played DBD!")
+            raise ValueError
 
         data = json.loads(response.text)
         

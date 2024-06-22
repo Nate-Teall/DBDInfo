@@ -1,8 +1,11 @@
 import discord
 import os
+
 from dbd import DbdApi
+from steam import SteamApi
 
 DBD = DbdApi()
+STEAM = SteamApi()
 
 class MyClient(discord.Client):
     async def on_ready(self):
@@ -15,15 +18,18 @@ class MyClient(discord.Client):
             params = message.content.split()
 
             match params[0]:
+                # Get a player's total times screamed from their vanity url name. 
+                # Not yet sure how to get steam id by username 
                 case "-screams": 
                     try:
-                        player_id = params[1]
+                        vanity_url = params[1]
+                        player_id = STEAM.get_steam_id_64(vanity_url)
                         scream_count = DBD.get_player_screams(player_id)
 
                         await message.channel.send("Yikes! You've screamed " + str(scream_count) + " times! :scream:")
 
                     except ValueError:
-                        await message.channel.send("Player ID: " + player_id + " not found!")
+                        await message.channel.send("Player: " + vanity_url + " not found!")
                     
                 case _: 
                     return
