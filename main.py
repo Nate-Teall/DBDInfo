@@ -31,6 +31,27 @@ class MyClient(discord.Client):
                     except ValueError:
                         await message.channel.send("Player: " + vanity_url + " not found!")
                     
+                case "-escapes":
+                    try:
+                        vanity_url = params[1]
+                        player_id = STEAM.get_steam_id_64(vanity_url)
+                        escaped, escaped_ko, escaped_hatch = DBD.get_escape_data(player_id)
+
+                        embed_desc = "Total Escapes: " + str(escaped) + "\n"\
+                                     "Escapes through hatch: " + str(escaped_hatch) + "\n"\
+                                     "Escapes while downed: " + str(escaped_ko) + "\n"\
+
+                        embed = discord.Embed(
+                            title="Survivor escapes for " + vanity_url,
+                            type="rich",
+                            color=0x60008a,
+                            description=embed_desc
+                            )
+                    
+                        await message.channel.send(embed=embed)
+
+                    except ValueError:
+                        await message.channel.send("Player: " + vanity_url + " not found!")
                 case _: 
                     return
 
