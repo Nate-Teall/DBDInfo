@@ -54,6 +54,7 @@ class MyClient(discord.Client):
                             description=embed_desc
                             )
                         embed.set_thumbnail(url=player_pfp_url)
+                        embed.set_author(name="DBD Info Bot", url="https://github.com/Nate-Teall/DBDInfo", icon_url=self.pfp_url)
                     
                         await message.channel.send(embed=embed)
 
