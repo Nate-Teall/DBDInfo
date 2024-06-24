@@ -5,13 +5,15 @@ import os
 # Handles requests to the steam API
 class SteamApi:
 
-    __slots__ = ["STEAM_RESOLVE_VANITY_URL"]
+    __slots__ = ["RESOLVE_VANITY_URL", "GET_PLAYER_SUMMARIES"]
 
     def __init__(self):
-        self.STEAM_RESOLVE_VANITY_URL = "https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=" + os.getenv("STEAM_API_KEY")
+        api_key = os.getenv("STEAM_API_KEY")
+        self.RESOLVE_VANITY_URL = "https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=" + api_key
+        self.GET_PLAYER_SUMMARIES = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + api_key
 
     def get_steam_id_64(self, vanity_url_name):
-        response = requests.get(self.STEAM_RESOLVE_VANITY_URL + "&vanityurl=" + vanity_url_name)
+        response = requests.get(self.RESOLVE_VANITY_URL + "&vanityurl=" + vanity_url_name)
         data = json.loads(response.text)["response"]
 
         if "steamid" not in data:
@@ -19,3 +21,17 @@ class SteamApi:
             raise ValueError
 
         return data["steamid"]
+    
+    def get_pfp_url(self, player_id):
+        response = requests.get(self.GET_PLAYER_SUMMARIES + "&steamids=" + player_id)
+        data = json.loads(response.text)["response"]["players"]
+
+        # "data" is an array of all the players it found, if it is empty, none were found
+        # realistically, this should never happen because the steamid64 provided here should
+        #   be obtained from the "get_steam_id_64" method which will return a valid id if found
+        if len(data) < 1:
+            print("Error getting profile url for user:", player_id)
+            raise ValueError
+        
+        return data[0]["avatarfull"]
+

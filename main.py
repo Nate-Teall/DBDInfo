@@ -8,8 +8,12 @@ DBD = DbdApi()
 STEAM = SteamApi()
 
 class MyClient(discord.Client):
+
+    __slots__ = ["pfp_url"]
+
     async def on_ready(self):
         print(f'Logged on as {self.user}!') 
+        self.pfp_url = self.user.display_avatar.url
 
     async def on_message(self, message):
         print(f'Message from {message.author}: {message.content}')
@@ -36,10 +40,12 @@ class MyClient(discord.Client):
                         vanity_url = params[1]
                         player_id = STEAM.get_steam_id_64(vanity_url)
                         escaped, escaped_ko, escaped_hatch = DBD.get_escape_data(player_id)
+                        player_pfp_url = STEAM.get_pfp_url(player_id)
 
                         embed_desc = "Total Escapes: " + str(escaped) + "\n"\
                                      "Escapes through hatch: " + str(escaped_hatch) + "\n"\
                                      "Escapes while downed: " + str(escaped_ko) + "\n"\
+                                     
 
                         embed = discord.Embed(
                             title="Survivor escapes for " + vanity_url,
@@ -47,6 +53,7 @@ class MyClient(discord.Client):
                             color=0x60008a,
                             description=embed_desc
                             )
+                        embed.set_thumbnail(url=player_pfp_url)
                     
                         await message.channel.send(embed=embed)
 
