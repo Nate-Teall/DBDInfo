@@ -1,6 +1,5 @@
 import discord
 import os
-from math import round
 
 from dbd import DbdApi
 from steam import SteamApi
@@ -106,7 +105,7 @@ class MyClient(discord.Client):
                         embed.add_field(name="Total Bloodpoints:", value=bloodpoints)
                         embed.add_field(name="Most BP Spent on one character:", value=most_bp)
 
-                        ach_pct = str( round(ach / self.total_achievements) )
+                        ach_pct = str( round(ach / self.total_achievements, 2) )
                         embed.add_field(
                             name="Achievements:", 
                             value=str(ach) + " / " + str(self.total_achievements) + " (" + ach_pct + "%)",
@@ -121,7 +120,7 @@ class MyClient(discord.Client):
                         killer_grade, killer_remainer = self.calculate_rank(killer_pip)
                         embed.add_field(
                             name="Killer Grade:",
-                            value=killer_grade + " " + killer_remainer + " pips",
+                            value=killer_grade + ", " + killer_remainer + " pips",
                             inline=True)
                         
                         await message.channel.send(embed=embed)
@@ -158,7 +157,7 @@ class MyClient(discord.Client):
             grade = self.grade_strings[ 8 + (pips-30) // 5 ]
             remainder = (pips-30) % 5
 
-        return grade, remainder
+        return grade, str(remainder)
 
 
 intents = discord.Intents.default()
