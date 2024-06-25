@@ -105,7 +105,7 @@ class MyClient(discord.Client):
                         embed.add_field(name="Total Bloodpoints:", value=bloodpoints)
                         embed.add_field(name="Most BP Spent on one character:", value=most_bp)
 
-                        ach_pct = str( round(ach / self.total_achievements, 2) )
+                        ach_pct = str( round((ach / self.total_achievements) * 100, 2) )
                         embed.add_field(
                             name="Achievements:", 
                             value=str(ach) + " / " + str(self.total_achievements) + " (" + ach_pct + "%)",
