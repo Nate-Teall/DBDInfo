@@ -34,4 +34,4 @@ class DbdApi:
     def player_overview(self, player_id):
         data = self.get_player_data(player_id)
 
-        return data["bloodpoints"], data["playtime"], data["survivor_rank"], data["killer_rank"]
+        return data["bloodpoints"], data["playtime"]

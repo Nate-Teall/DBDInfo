@@ -87,7 +87,7 @@ class MyClient(discord.Client):
                     try:
                         vanity_url = params[1]
                         player_id = STEAM.get_steam_id_64(vanity_url)
-                        bloodpoints, playtime, survivor_rank, killer_rank = DBD.player_overview(player_id)
+                        bloodpoints, playtime = DBD.player_overview(player_id)
                         steam_data = STEAM.get_dbd_data(player_id)
                         player_pfp_url = STEAM.get_pfp_url(player_id)
 
@@ -95,6 +95,8 @@ class MyClient(discord.Client):
                         # Because they are all separate json objects in a list, I cannot simply use the dictionary key to find it
                         most_bp = steam_data["stats"][27]["value"]
                         ach = len(steam_data["achievements"])
+                        killer_pip = steam_data["stats"][0]["value"]
+                        surv_pip = steam_data["stats"][1]["value"]
 
                         embed = self.make_embed()
                         embed.title = "Overview for: " + vanity_url
@@ -108,11 +110,11 @@ class MyClient(discord.Client):
                             inline=True)
                         embed.add_field(
                             name="Survivor Grade:",
-                            value=self.calculate_rank(survivor_rank) + " (" + str(survivor_rank) + " pips)",
+                            value=self.calculate_rank(surv_pip) + " (" + str(surv_pip) + " pips)",
                             inline=True)
                         embed.add_field(
                             name="Killer Grade:",
-                            value=self.calculate_rank(killer_rank) + " (" +str(killer_rank) + " pips)",
+                            value=self.calculate_rank(killer_pip) + " (" +str(killer_pip) + " pips)",
                             inline=True)
                         
                         await message.channel.send(embed=embed)
@@ -137,11 +139,11 @@ class MyClient(discord.Client):
         if pips < 6:
             grade = self.grade_strings[ pips // 3 ]
         # Ash II - Bronze I
-        elif pips < 22:
-            grade = self.grade_strings[ pips-6 // 4]
+        elif pips < 30:
+            grade = self.grade_strings[ 2 + (pips-6) // 4 ]
         # Silver IV - Iri I
         else:
-            grade = self.grade_strings[ pips-22 // 5]
+            grade = self.grade_strings[ 8 + (pips-22) // 5 ]
 
         return grade
 
