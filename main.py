@@ -1,5 +1,6 @@
 import discord
 import os
+from math import round
 
 from dbd import DbdApi
 from steam import SteamApi
@@ -104,17 +105,23 @@ class MyClient(discord.Client):
                         embed.add_field(name="Playtime:", value=str(playtime/60) + " hours")
                         embed.add_field(name="Total Bloodpoints:", value=bloodpoints)
                         embed.add_field(name="Most BP Spent on one character:", value=most_bp)
+
+                        ach_pct = str( round(ach / self.total_achievements) )
                         embed.add_field(
                             name="Achievements:", 
-                            value=str(ach) + " / " + str(self.total_achievements) + " (" + str(ach/self.total_achievements) + "%)",
+                            value=str(ach) + " / " + str(self.total_achievements) + " (" + ach_pct + "%)",
                             inline=True)
+                        
+                        surv_grade, surv_remainder = self.calculate_rank(surv_pip)
                         embed.add_field(
                             name="Survivor Grade:",
-                            value=self.calculate_rank(surv_pip) + " (" + str(surv_pip) + " pips)",
+                            value=surv_grade + ", " + surv_remainder + " pips",
                             inline=True)
+                        
+                        killer_grade, killer_remainer = self.calculate_rank(killer_pip)
                         embed.add_field(
                             name="Killer Grade:",
-                            value=self.calculate_rank(killer_pip) + " (" +str(killer_pip) + " pips)",
+                            value=killer_grade + " " + killer_remainer + " pips",
                             inline=True)
                         
                         await message.channel.send(embed=embed)
@@ -134,18 +141,24 @@ class MyClient(discord.Client):
     # Helper function to calculate the survivor/killer grade from the number of pips (gold I, iri III, ash IV, etc...)
     def calculate_rank(self, pips):
         grade = ""
+        remainder = 0
 
         # Ash IV - III
         if pips < 6:
             grade = self.grade_strings[ pips // 3 ]
+            remainder = pips % 3
+
         # Ash II - Bronze I
         elif pips < 30:
             grade = self.grade_strings[ 2 + (pips-6) // 4 ]
+            remainder = (pips-6) % 4
+
         # Silver IV - Iri I
         else:
-            grade = self.grade_strings[ 8 + (pips-22) // 5 ]
+            grade = self.grade_strings[ 8 + (pips-30) // 5 ]
+            remainder = (pips-30) % 5
 
-        return grade
+        return grade, remainder
 
 
 intents = discord.Intents.default()
