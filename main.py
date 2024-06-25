@@ -12,18 +12,34 @@ class MyClient(discord.Client):
     __slots__ = ["pfp_url"]
 
     # This shouldn't be hard coded, I will find a way to get the total number of achievements from steam.
-    total_achievements = "255"
+    total_achievements = 255
+
+    grade_strings = [
+        "Ash IV",
+        "Ash III",
+        "Ash II",
+        "Ash I",
+        "Bronze IV",
+        "Bronze III",
+        "Bronze II",
+        "Bronze I",
+        "Silver IV",
+        "Silver III",
+        "Silver II",
+        "Silver I",
+        "Gold IV",
+        "Gold III",
+        "Gold II",
+        "Gold I",
+        "Iridescent IV",
+        "Iridescent III",
+        "Iridescent II",
+        "Iridescent I"
+    ]
 
     async def on_ready(self):
         print(f'Logged on as {self.user}!') 
         self.pfp_url = self.user.display_avatar.url
-
-    def make_embed(self):
-        embed = discord.Embed(type="rich", color=0x60008a)
-        embed.set_author(name="DBD Info Bot", url="https://github.com/Nate-Teall/DBDInfo", icon_url=self.pfp_url)
-        embed.set_footer(text="See you in the fog...")
-
-        return embed
 
     async def on_message(self, message):
         print(f'Message from {message.author}: {message.content}')
@@ -88,15 +104,15 @@ class MyClient(discord.Client):
                         embed.add_field(name="Most BP Spent on one character:", value=most_bp)
                         embed.add_field(
                             name="Achievements:", 
-                            value=str(ach) + " / " + self.total_achievements + " achievements",
+                            value=str(ach) + " / " + str(self.total_achievements) + " (" + str(ach/self.total_achievements) + "%)",
                             inline=True)
                         embed.add_field(
                             name="Survivor Grade:",
-                            value=str(survivor_rank) + " pips",
+                            value=self.calculate_rank(survivor_rank) + " (" + str(survivor_rank) + " pips)",
                             inline=True)
                         embed.add_field(
                             name="Killer Grade:",
-                            value=str(killer_rank) + " pips",
+                            value=self.calculate_rank(killer_rank) + " (" +str(killer_rank) + " pips)",
                             inline=True)
                         
                         await message.channel.send(embed=embed)
@@ -105,6 +121,30 @@ class MyClient(discord.Client):
                         await message.channel.send("Player: " + vanity_url + " not found!")
                 case _: 
                     return
+
+    def make_embed(self):
+        embed = discord.Embed(type="rich", color=0x60008a)
+        embed.set_author(name="DBD Info Bot", url="https://github.com/Nate-Teall/DBDInfo", icon_url=self.pfp_url)
+        embed.set_footer(text="See you in the fog...")
+
+        return embed
+    
+    # Helper function to calculate the survivor/killer grade from the number of pips (gold I, iri III, ash IV, etc...)
+    def calculate_rank(self, pips):
+        grade = ""
+
+        # Ash IV - III
+        if pips < 6:
+            grade = self.grade_strings[ pips // 3 ]
+        # Ash II - Bronze I
+        elif pips < 22:
+            grade = self.grade_strings[ pips-6 // 4]
+        # Silver IV - Iri I
+        else:
+            grade = self.grade_strings[ pips-22 // 5]
+
+        return grade
+
 
 intents = discord.Intents.default()
 intents.message_content = True
