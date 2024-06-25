@@ -5,12 +5,14 @@ import os
 # Handles requests to the steam API
 class SteamApi:
 
-    __slots__ = ["RESOLVE_VANITY_URL", "GET_PLAYER_SUMMARIES"]
+    __slots__ = ["RESOLVE_VANITY_URL", "GET_PLAYER_SUMMARIES", "GET_STATS_FOR_GAME"]
 
     def __init__(self):
         api_key = os.getenv("STEAM_API_KEY")
+
         self.RESOLVE_VANITY_URL = "https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=" + api_key
         self.GET_PLAYER_SUMMARIES = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + api_key
+        self.GET_STATS_FOR_GAME = "https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=381210&key=" + api_key
 
     def get_steam_id_64(self, vanity_url_name):
         response = requests.get(self.RESOLVE_VANITY_URL + "&vanityurl=" + vanity_url_name)
@@ -34,4 +36,14 @@ class SteamApi:
             raise ValueError
         
         return data[0]["avatarfull"]
+    
+    def get_dbd_data(self, player_id):
+        response = requests.get(self.GET_STATS_FOR_GAME + "&steamid=" + player_id)
+
+        if response.status_code >= 400:
+            print("Error getting DBD stats from Steam for user:", player_id)
+            raise ValueError
+        
+        data = json.loads(response.text)["playerstats"]
+        return data
 
