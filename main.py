@@ -93,6 +93,7 @@ class MyClient(discord.Client):
 
                         # Steam gives the data as a list of json objects, the 28th of which gives the stat we're looking for
                         # Because they are all separate json objects in a list, I cannot simply use the dictionary key to find it
+                        # NOTE: THIS DOES NOT WORK FOR ALL USERS. MOST_BP SEEMS TO BREAK
                         most_bp = steam_data["stats"][27]["value"]
                         ach = len(steam_data["achievements"])
                         killer_pip = steam_data["stats"][0]["value"]
@@ -101,7 +102,7 @@ class MyClient(discord.Client):
                         embed = self.make_embed()
                         embed.title = "Overview for: " + vanity_url
                         embed.set_thumbnail(url=player_pfp_url)
-                        embed.add_field(name="Playtime:", value=str(playtime/60) + " hours")
+                        embed.add_field(name="Playtime:", value=str(round(playtime/60, 1)) + " hours")
                         embed.add_field(name="Total Bloodpoints:", value=bloodpoints)
                         embed.add_field(name="Most BP Spent on one character:", value=most_bp)
 
