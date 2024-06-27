@@ -2,7 +2,7 @@
 class Screams:
     __slots__ = ["name", "description", "usage", "num_args", "DBD", "STEAM"]
 
-    def __init__(self, DBD, STEAM) -> None:
+    def __init__(self, DBD, STEAM):
         self.name = "screams"
         self.description = "Provides the number of times a player has screamed as a survivor"
         self.usage = "-screams <steam-vanity-url>"
@@ -12,7 +12,8 @@ class Screams:
         self.STEAM = STEAM
 
     def run(self, args):
-        response = ["", None]
+        response = [None, None]
+
         try:
             vanity_url = args[1]
             player_id = self.STEAM.get_steam_id_64(vanity_url)

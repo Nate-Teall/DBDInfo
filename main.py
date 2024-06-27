@@ -1,13 +1,16 @@
 import discord
 import os
 
-from dbd import DbdApi
-from steam import SteamApi
+from apis.dbd import DbdApi
+from apis.steam import SteamApi
 
-from screams import Screams
+from commands.command_utils import CommandUtils
+from commands.screams import Screams
+from commands.escapes import Escapes
 
 DBD = DbdApi()
 STEAM = SteamApi()
+UTILS = CommandUtils()
 
 class MyClient(discord.Client):
 
@@ -38,20 +41,21 @@ class MyClient(discord.Client):
     ]
 
     commands = {
-        "-screams":Screams(DBD, STEAM)
+        "-screams":Screams(DBD, STEAM),
+        "-escapes":Escapes(DBD, STEAM, UTILS)
     }
 
     async def on_ready(self):
         print(f'Logged on as {self.user}!') 
-        self.pfp_url = self.user.display_avatar.url
+        # Not sure if this is the best way to handle the utils methods
+        UTILS.set_pfp_url(self.user.display_avatar.url)
 
     async def on_message(self, message):
-        print(f'Message from {message.author}: {message.content}')
 
         if message.content.startswith("-"):
             args = message.content.split()
             arg_count = len(args)
-            response = ["", None]
+            response = [None, None]
 
             # Check if the command is valid
             if args[0] not in self.commands:
@@ -160,13 +164,6 @@ class MyClient(discord.Client):
                         await message.channel.send("Player: " + vanity_url + " not found!")
                 case _: 
                     return
-
-    def make_embed(self):
-        embed = discord.Embed(type="rich", color=0x60008a)
-        embed.set_author(name="DBD Info Bot", url="https://github.com/Nate-Teall/DBDInfo", icon_url=self.pfp_url)
-        embed.set_footer(text="See you in the fog...")
-
-        return embed
     
     # Helper function to calculate the survivor/killer grade from the number of pips (gold I, iri III, ash IV, etc...)
     def calculate_rank(self, pips):
@@ -190,12 +187,8 @@ class MyClient(discord.Client):
 
         return grade, str(remainder)
 
-
 intents = discord.Intents.default()
 intents.message_content = True
 
 client = MyClient(intents=intents)
 client.run(os.getenv('DISCORD_TOKEN'))
-
-#if __name__ == "__main__":
-#    main()
