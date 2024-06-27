@@ -4,12 +4,12 @@ import os
 from dbd import DbdApi
 from steam import SteamApi
 
+from screams import Screams
+
 DBD = DbdApi()
 STEAM = SteamApi()
 
 class MyClient(discord.Client):
-
-    __slots__ = ["pfp_url"]
 
     # This shouldn't be hard coded, I will find a way to get the total number of achievements from steam.
     total_achievements = 255
@@ -37,6 +37,10 @@ class MyClient(discord.Client):
         "Iridescent I"
     ]
 
+    commands = {
+        "-screams":Screams(DBD, STEAM)
+    }
+
     async def on_ready(self):
         print(f'Logged on as {self.user}!') 
         self.pfp_url = self.user.display_avatar.url
@@ -45,14 +49,36 @@ class MyClient(discord.Client):
         print(f'Message from {message.author}: {message.content}')
 
         if message.content.startswith("-"):
-            params = message.content.split()
+            args = message.content.split()
+            arg_count = len(args)
+            response = ["", None]
 
-            match params[0]:
+            # Check if the command is valid
+            if args[0] not in self.commands:
+                response[0] = "Command " + args[0] + " not found!"
+
+            else:
+                command = self.commands[args[0]]
+
+                # Check if the proper number of arguments was given
+                # Every command must have a field called num_args
+                if arg_count < command.num_args:
+                    response[0] = f"Missing arguments:\n\tUsage: " + command.usage
+
+                else:
+                    # Every command must have a run function that takes an array of arguments
+                    # and returns a array that contains [message text, embed], one can be None
+                    response = command.run(args)
+            
+            await message.channel.send(content=response[0], embed=response[1])
+            return
+
+            match args[0]:
                 # Get a player's total times screamed from their vanity url name. 
                 # Not yet sure how to get steam id by username 
                 case "-screams": 
                     try:
-                        vanity_url = params[1]
+                        vanity_url = args[1]
                         player_id = STEAM.get_steam_id_64(vanity_url)
                         scream_count = DBD.get_player_screams(player_id)
 
@@ -63,7 +89,7 @@ class MyClient(discord.Client):
                     
                 case "-escapes":
                     try:
-                        vanity_url = params[1]
+                        vanity_url = args[1]
                         player_id = STEAM.get_steam_id_64(vanity_url)
                         escaped, escaped_ko, escaped_hatch = DBD.get_escape_data(player_id)
                         player_pfp_url = STEAM.get_pfp_url(player_id)
@@ -85,7 +111,7 @@ class MyClient(discord.Client):
                 case "-stats":
                     # Overview includes: total BP, playtime, Most BP on a single char, grades, ach. progress
                     try:
-                        vanity_url = params[1]
+                        vanity_url = args[1]
                         player_id = STEAM.get_steam_id_64(vanity_url)
                         bloodpoints, playtime = DBD.player_overview(player_id)
                         steam_data = STEAM.get_dbd_data(player_id)
