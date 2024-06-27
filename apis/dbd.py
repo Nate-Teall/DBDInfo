@@ -35,3 +35,9 @@ class DbdApi:
         data = self.get_player_data(player_id)
 
         return data["bloodpoints"], data["playtime"]
+    
+    def randomize(self, role):
+        response = requests.get(self.DBD_URL + "randomperks?role=" + role)
+        data = json.loads(response.text)
+
+        return data
