@@ -13,7 +13,7 @@ DBD = DbdApi()
 STEAM = SteamApi()
 UTILS = CommandUtils()
 
-class MyClient(discord.Client):
+class DBDInfoClient(discord.Client):
 
     commands = {
         "-stats":Stats(DBD, STEAM, UTILS),
@@ -34,11 +34,11 @@ class MyClient(discord.Client):
             response = [None, None]
 
             # Check if the command is valid
-            if args[0] not in self.commands:
+            if args[0] not in DBDInfoClient.commands:
                 response[0] = "Command " + args[0] + " not found!"
 
             else:
-                command = self.commands[args[0]]
+                command = DBDInfoClient.commands[args[0]]
 
                 # Check if the proper number of arguments was given
                 # Every command must have a field called num_args
@@ -55,5 +55,5 @@ class MyClient(discord.Client):
 intents = discord.Intents.default()
 intents.message_content = True
 
-client = MyClient(intents=intents)
+client = DBDInfoClient(intents=intents)
 client.run(os.getenv('DISCORD_TOKEN'))
