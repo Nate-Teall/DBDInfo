@@ -33,8 +33,22 @@ class DBDInfoClient(discord.Client):
             arg_count = len(args)
             response = [None, None]
 
+            # Help Command
+            if args[0] == "-help":
+                embed = UTILS.make_embed()
+                embed.title = "DBD Info Bot Commands"
+                embed.set_thumbnail(url=UTILS.pfp_url)
+
+                for cmd in DBDInfoClient.commands.values():
+                    embed.add_field(
+                        name=cmd.name, 
+                        value=cmd.description + "\nUsage: " + cmd.usage,
+                        inline=False)
+                
+                response[1] = embed
+
             # Check if the command is valid
-            if args[0] not in DBDInfoClient.commands:
+            elif args[0] not in DBDInfoClient.commands:
                 response[0] = "Command " + args[0] + " not found!"
 
             else:
