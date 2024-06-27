@@ -15,32 +15,6 @@ UTILS = CommandUtils()
 
 class MyClient(discord.Client):
 
-    # This shouldn't be hard coded, I will find a way to get the total number of achievements from steam.
-    total_achievements = 255
-
-    grade_strings = [
-        "Ash IV",
-        "Ash III",
-        "Ash II",
-        "Ash I",
-        "Bronze IV",
-        "Bronze III",
-        "Bronze II",
-        "Bronze I",
-        "Silver IV",
-        "Silver III",
-        "Silver II",
-        "Silver I",
-        "Gold IV",
-        "Gold III",
-        "Gold II",
-        "Gold I",
-        "Iridescent IV",
-        "Iridescent III",
-        "Iridescent II",
-        "Iridescent I"
-    ]
-
     commands = {
         "-stats":Stats(DBD, STEAM, UTILS),
         "-screams":Screams(DBD, STEAM),
