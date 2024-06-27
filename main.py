@@ -103,8 +103,12 @@ class MyClient(discord.Client):
                         embed.title = "Overview for: " + vanity_url
                         embed.set_thumbnail(url=player_pfp_url)
                         embed.add_field(name="Playtime:", value=str(round(playtime/60, 1)) + " hours")
-                        embed.add_field(name="Total Bloodpoints:", value=bloodpoints)
-                        embed.add_field(name="Most BP Spent on one character:", value=most_bp)
+
+                        bp_str = f'{bloodpoints:,}' 
+                        embed.add_field(name="Total Bloodpoints:", value=bp_str)
+
+                        most_bp_str = f'{most_bp:,}'
+                        embed.add_field(name="Most BP Spent on one character:", value=most_bp_str)
 
                         ach_pct = str( round((ach / self.total_achievements) * 100, 2) )
                         embed.add_field(
