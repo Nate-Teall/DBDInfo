@@ -7,8 +7,8 @@ class Randomize:
 
     def __init__(self, DBD, UTILS):
         self.name = "randomize"
-        self.description = "Gives a random perk set for survivor or killer"
-        self.usage = "-randomize < killer | survivor >"
+        self.description = "Gives a random perk set for survivor or killer, use -d to include descriptions"
+        self.usage = "-randomize < killer | survivor > [-d]"
         self.num_args = 2
 
         self.DBD = DBD
@@ -16,6 +16,9 @@ class Randomize:
 
     def run(self, args):
         response = [None, None]
+
+        # Check if the user wants the perk descriptions included
+        include_descriptions = len(args) > 2 and "d" in args[2]
 
         if args[1].startswith("s"):
             perks = self.DBD.randomize("survivor")
@@ -34,10 +37,8 @@ class Randomize:
 
         for perk in perks.values():
             perk_name = perk["name"]
-            
-            # Descriptions are very long, I'll make it a separate option
-            #desc = self.cleanup_description(perk["description"])
-            desc = ""
+
+            desc = self.cleanup_description(perk["description"], perk["tunables"]) if include_descriptions else ""
 
             # I would like to include images of perk icons, but mutliple images in a message/embed is not supported
             # Also, I'm not sure where to get a URL for the perk icons, I do not want to download all the images
@@ -46,8 +47,21 @@ class Randomize:
         response[1] = embed
         return response
     
-    def cleanup_description(self, desc):
+    def cleanup_description(self, desc, tunables):
         # Remove weird html tags
         desc = re.sub("<..?.?>", " ", desc)
+        
+        # Fill in tunables
+        desc = desc.split()
+
+        tunable = 0
+        i = 0
+        for word in desc:
+            if word.startswith("{"):
+                desc[i] = tunables[tunable].pop()
+                tunable += 1
+            i += 1
+
+        desc = " ".join(desc)
 
         return desc 
