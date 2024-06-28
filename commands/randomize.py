@@ -1,4 +1,5 @@
 from discord import Embed
+import re
 
 # Returns a set of random perks for either killer or survivor
 class Randomize:
@@ -18,33 +19,35 @@ class Randomize:
 
         if args[1].startswith("s"):
             perks = self.DBD.randomize("survivor")
+            title = "Random Survivor Loadout:"
 
         elif args[1].startswith("k"):
             perks = self.DBD.randomize("killer")
+            title = "Random Killer Loadout:"
 
         else:
             response[0] = "Please specify 'survivor' or 'killer' \n\tUsage: " + self.usage
             return response
-    
-        #TODO: Finish this command. 
-        #   I want to include perk images but have no idea how to include them without downloading all of them  
 
-        embed1 = self.UTILS.make_embed()
-        embed1.url = "https://google.com"
-        embed1.set_image(url="https://dbd.tricky.lol/dbdassets/perks/2e1351c5165afbbec431b3f1a711546f92693a9e.png")
+        embed = self.UTILS.make_embed()
+        embed.title = title
 
-        embed2 = Embed()
-        embed2.url = "https://google.com"
-        embed2.set_image(url="https://dbd.tricky.lol/dbdassets/perks/2e1351c5165afbbec431b3f1a711546f92693a9e.png")
+        for perk in perks.values():
+            perk_name = perk["name"]
+            
+            # Descriptions are very long, I'll make it a separate option
+            #desc = self.cleanup_description(perk["description"])
+            desc = ""
 
-        embed3 = Embed()
-        embed3.url = "https://google.com"
-        embed3.set_image(url="https://dbd.tricky.lol/dbdassets/perks/2e1351c5165afbbec431b3f1a711546f92693a9e.png")
+            # I would like to include images of perk icons, but mutliple images in a message/embed is not supported
+            # Also, I'm not sure where to get a URL for the perk icons, I do not want to download all the images
+            embed.add_field(name=perk_name, value=desc, inline=False)
 
-        embed4 = Embed()
-        embed4.url = "https://google.com"
-        embed4.set_image(url="https://dbd.tricky.lol/dbdassets/perks/2e1351c5165afbbec431b3f1a711546f92693a9e.png")
-
-        response[1] = [embed1, embed2, embed3, embed4]
-
+        response[1] = embed
         return response
+    
+    def cleanup_description(self, desc):
+        # Remove weird html tags
+        desc = re.sub("<..?.?>", " ", desc)
+
+        return desc 
