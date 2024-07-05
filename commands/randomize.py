@@ -62,6 +62,7 @@ class Randomize:
     
     def cleanup_description(self, desc, tunables):
         # Remove weird html tags
+        # Possibly, replace the bold/italicize/newline tags with their markdown counterpart
         desc = re.sub("<..?.?>", " ", desc)
         
         # Fill in tunables
