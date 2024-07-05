@@ -11,4 +11,4 @@ COPY . .
 RUN pip3 install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 # This is the command that will be used to run the app
-#CMD ["echo", "'Container Started'"]
+CMD ["python", "main.py"]
