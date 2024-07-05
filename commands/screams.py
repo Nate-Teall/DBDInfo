@@ -12,7 +12,7 @@ class Screams:
         self.STEAM = STEAM
 
     def run(self, args):
-        response = [None, None]
+        response = [None, None, None, None]
 
         try:
             vanity_url = args[1]

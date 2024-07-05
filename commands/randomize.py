@@ -1,4 +1,4 @@
-from discord import Embed
+from discord import Embed, File
 import re
 
 # Returns a set of random perks for either killer or survivor
@@ -15,36 +15,44 @@ class Randomize:
         self.UTILS = UTILS
 
     def run(self, args):
-        response = [None, None]
+        response = [None, None, None, 1]
 
         # Check if the user wants the perk descriptions included
         include_descriptions = len(args) > 2 and "d" in args[2]
 
         if args[1].startswith("s"):
             perks = self.DBD.randomize("survivor")
-            title = "Random Survivor Loadout:"
 
         elif args[1].startswith("k"):
             perks = self.DBD.randomize("killer")
-            title = "Random Killer Loadout:"
 
         else:
             response[0] = "Please specify 'survivor' or 'killer' \n\tUsage: " + self.usage
             return response
 
-        embed = self.UTILS.make_embed()
-        embed.title = title
+        
+        embed_list = []
+        file_list = []
 
         for perk in perks.values():
-            perk_name = perk["name"]
+            embed = Embed(title=perk["name"], color=0x032d8a)
 
             desc = self.cleanup_description(perk["description"], perk["tunables"]) if include_descriptions else ""
+            embed.description = desc
 
-            # I would like to include images of perk icons, but mutliple images in a message/embed is not supported
-            # Also, I'm not sure where to get a URL for the perk icons, I do not want to download all the images
-            embed.add_field(name=perk_name, value=desc, inline=False)
+            icon_path = perk["image"]
+            icon_name = icon_path.split("/").pop()
+            try:
+                file = File(icon_path, filename=icon_name)   
+                embed.set_thumbnail(url="attachment://" + icon_name)
+                file_list.append(file)
+            except FileNotFoundError:
+                print("Missing perk icon for:", perk["name"], " . Might need to download new icons")
 
-        response[1] = embed
+            embed_list.append(embed)
+
+        response[2] = embed_list
+        response[3] = file_list
         return response
     
     def cleanup_description(self, desc, tunables):

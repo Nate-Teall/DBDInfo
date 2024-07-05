@@ -63,10 +63,10 @@ class DBDInfoClient(discord.Client):
 
                 else:
                     # Every command must have a run function that takes an array of arguments
-                    # and returns a array that contains [message text, embed], one can be None
+                    # and returns a array that contains [message text, embed, embed_list, files_list], only one of which needs a value
                     response = command.run(args)
             
-            await message.channel.send(content=response[0], embed=response[1])
+            await message.channel.send(content=response[0], embed=response[1], embeds=response[2], files=response[3])
 
 intents = discord.Intents.default()
 intents.message_content = True

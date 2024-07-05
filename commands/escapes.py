@@ -13,7 +13,7 @@ class Escapes:
         self.UTILS = UTILS
 
     def run(self, args):
-        response = [None, None]
+        response = [None, None, None, None]
 
         try:
             vanity_url = args[1]

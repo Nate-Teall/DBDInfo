@@ -38,7 +38,7 @@ class Stats:
         self.UTILS = UTILS
 
     def run(self, args):
-        response = [None, None]
+        response = [None, None, None, None]
 
         # Overview includes: total BP, playtime, Most BP on a single char, grades, ach. progress
         try:
