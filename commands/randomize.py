@@ -22,9 +22,13 @@ class Randomize:
 
         if args[1].startswith("s"):
             perks = self.DBD.randomize("survivor")
+            title = "Random Survivor Perk:"
+            embed_color = 0x52a5ff
 
         elif args[1].startswith("k"):
             perks = self.DBD.randomize("killer")
+            title = "Random Killer Perk:"
+            embed_color = 0xff4040
 
         else:
             response[0] = "Please specify 'survivor' or 'killer' \n\tUsage: " + self.usage
@@ -35,7 +39,8 @@ class Randomize:
         file_list = []
 
         for perk in perks.values():
-            embed = Embed(title=perk["name"], color=0x032d8a)
+            embed = Embed(title=perk["name"], color=embed_color)
+            embed.set_author(name=title, icon_url=self.UTILS.pfp_url)
 
             desc = self.cleanup_description(perk["description"], perk["tunables"]) if include_descriptions else ""
             embed.description = desc
