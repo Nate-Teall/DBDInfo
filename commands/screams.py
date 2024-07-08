@@ -2,13 +2,12 @@
 class Screams:
     __slots__ = ["name", "description", "usage", "num_args", "DBD", "STEAM"]
 
-    def __init__(self, DBD, STEAM):
+    def __init__(self, STEAM):
         self.name = "screams"
         self.description = "Provides the number of times a player has screamed as a survivor"
         self.usage = "-screams <steam-vanity-url>"
         self.num_args = 2
 
-        self.DBD = DBD
         self.STEAM = STEAM
 
     def run(self, args):
@@ -17,7 +16,10 @@ class Screams:
         try:
             vanity_url = args[1]
             player_id = self.STEAM.get_steam_id_64(vanity_url)
-            scream_count = self.DBD.get_player_screams(player_id)
+
+            steam_data = self.STEAM.get_dbd_data(player_id)
+            player_stats = { stat["name"]:stat["value"] for stat in steam_data["stats"] }
+            scream_count = player_stats["DBD_Camper38_Stat2"]
 
             response[0] = "Yikes! " + vanity_url + " has screamed " + str(scream_count) + " times! :scream:"
 

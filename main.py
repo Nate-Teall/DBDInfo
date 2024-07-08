@@ -17,8 +17,8 @@ UTILS = CommandUtils()
 class DBDInfoClient(discord.Client):
 
     commands = {
-        "-stats":Stats(DBD, STEAM, UTILS),
-        "-screams":Screams(DBD, STEAM),
+        "-stats":Stats(STEAM, UTILS),
+        "-screams":Screams(STEAM),
         "-escapes":Escapes(DBD, STEAM, UTILS),
         "-randomize":Randomize(DBD, UTILS)
     }
