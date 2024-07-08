@@ -52,11 +52,12 @@ class Stats:
             steam_data = self.STEAM.get_dbd_data(player_id)
             player_stats = { stat["name"]:stat["value"] for stat in steam_data["stats"] }
 
-            total_bp = player_stats["DBD_BloodwebPoints"]
-            most_bp = player_stats["DBD_MaxBloodwebPointsOneCategory"]
+            # I have to add this extra "if" because if a stat is 0, then it simply doesn't appear in the response
+            total_bp = player_stats["DBD_BloodwebPoints"] if "DBD_BloodwebPoints" in player_stats else 0
+            most_bp = player_stats["DBD_MaxBloodwebPointsOneCategory"] if "DBD_MaxBloodwebPointsOneCategory" in player_stats else 0
             ach = len(steam_data["achievements"])
-            killer_pip = player_stats["DBD_KillerSkulls"]
-            surv_pip = player_stats["DBD_CamperSkulls"]
+            killer_pip = player_stats["DBD_KillerSkulls"] if "DBD_KillerSkulls" in player_stats else 0
+            surv_pip = player_stats["DBD_CamperSkulls"] if "DBD_CamperSkulls" in player_stats else 0
 
             embed = self.UTILS.make_embed()
             embed.title = "Overview for: " + vanity_url
