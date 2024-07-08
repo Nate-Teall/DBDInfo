@@ -33,7 +33,7 @@ class DBDInfoClient(discord.Client):
         if message.content.startswith("-"):
             args = message.content.split()
             arg_count = len(args)
-            response = [None, None]
+            response = [None, None, None, None]
 
             # Help Command
             if args[0] == "-help":
