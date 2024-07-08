@@ -59,7 +59,7 @@ class Stats:
             killer_pip = player_stats["DBD_KillerSkulls"] if "DBD_KillerSkulls" in player_stats else 0
             surv_pip = player_stats["DBD_CamperSkulls"] if "DBD_CamperSkulls" in player_stats else 0
 
-            embed = self.UTILS.make_embed()
+            embed = self.UTILS.make_embed(self.UTILS.Color.NEUTRAL)
             embed.title = "Overview for: " + vanity_url
             embed.set_thumbnail(url=player_pfp_url)
             embed.add_field(name="Playtime:", value=str(round(playtime/60, 1)) + " hours")

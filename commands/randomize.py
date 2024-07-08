@@ -23,12 +23,12 @@ class Randomize:
         if args[1].startswith("s"):
             perks = self.DBD.randomize("survivor")
             title = "Random Survivor Perk:"
-            embed_color = 0x52a5ff
+            embed_color = self.UTILS.Color.SURVIVOR.value
 
         elif args[1].startswith("k"):
             perks = self.DBD.randomize("killer")
             title = "Random Killer Perk:"
-            embed_color = 0xff4040
+            embed_color = self.UTILS.Color.KILLER.value
 
         else:
             response[0] = "Please specify 'survivor' or 'killer' \n\tUsage: " + self.usage

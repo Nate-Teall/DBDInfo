@@ -37,7 +37,7 @@ class DBDInfoClient(discord.Client):
 
             # Help Command
             if args[0] == "-help":
-                embed = UTILS.make_embed()
+                embed = UTILS.make_embed(UTILS.Color.NEUTRAL)
                 embed.title = "DBD Info Bot Commands"
                 embed.set_thumbnail(url=UTILS.pfp_url)
 

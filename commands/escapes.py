@@ -31,7 +31,7 @@ class Escapes:
                          "Escapes through hatch: " + str(escapes_hatch) + "\n"\
                          "Escapes while downed: " + str(escapes_ko) + "\n"\
                                      
-            embed = self.UTILS.make_embed()
+            embed = self.UTILS.make_embed(self.UTILS.Color.SURVIVOR)
             embed.title = "Survivor escapes for " + vanity_url
             embed.description = embed_desc
             embed.set_thumbnail(url=player_pfp_url)
