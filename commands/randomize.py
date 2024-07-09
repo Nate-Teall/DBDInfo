@@ -5,6 +5,8 @@ import re
 class Randomize:
     __slots__ = ["name", "description", "usage", "num_args", "DBD", "UTILS"]
 
+    NIGHTLIGHT_URL = "https://cdn.nightlight.gg/img/"
+
     def __init__(self, DBD, UTILS):
         self.name = "randomize"
         self.description = "Gives a random perk set for survivor or killer, use -d to include descriptions"
@@ -15,7 +17,7 @@ class Randomize:
         self.UTILS = UTILS
 
     def run(self, args):
-        response = [None, None, None, 1]
+        response = [None, None, None, None]
 
         # Check if the user wants the perk descriptions included
         include_descriptions = len(args) > 2 and "d" in args[2]
@@ -61,7 +63,7 @@ class Randomize:
             embed_list.append(embed)
 
         response[2] = embed_list
-        response[3] = file_list
+        #response[3] = file_list
         return response
     
     def cleanup_description(self, desc, tunables):
@@ -92,4 +94,4 @@ def get_url(path):
     icon_name = split_path.pop().split("_")[1]
 
     # nightlight urls also do not include the "UI/icons" at the beginning of the filepath
-    return "/".join(split_path[2:]) + "/" + icon_name
+    return randomize.NIGHTLIGHT_URL + "/".join(split_path[2:]) + "/" + icon_name
