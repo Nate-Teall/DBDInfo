@@ -92,7 +92,7 @@ def get_url(path):
     # nightlight.gg urls do not include the "iconPerks_" part
     icon_name = split_path.pop().split("_")[1]
     # nightlight perks are in camelcase
-    icon_name[0] = icon_name[0].lower()
+    icon_name = icon_name[:1].lower() + icon_name[1:]
 
     # nightlight urls also do not include the "UI/icons" at the beginning of the filepath
     return Randomize.NIGHTLIGHT_URL + "/".join(split_path[3:]) + "/" + icon_name
