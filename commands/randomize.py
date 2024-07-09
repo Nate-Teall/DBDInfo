@@ -46,13 +46,17 @@ class Randomize:
             embed.description = desc
 
             icon_path = perk["image"]
-            icon_name = icon_path.split("/").pop()
+            icon_url = get_url(icon_path)
+
+            """ icon_name = icon_path.split("/").pop()
             try:
-                file = File(icon_path, filename=icon_name)   
+                file = File(icon_path, filename=icon_name)
                 embed.set_thumbnail(url="attachment://" + icon_name)
                 file_list.append(file)
             except FileNotFoundError:
-                print("Missing perk icon for:", perk["name"], " . Might need to download new icons")
+                print("Missing perk icon for:", perk["name"], " . Might need to download new icons") """
+
+            embed.set_thumbnail(url="icon_url")
 
             embed_list.append(embed)
 
@@ -78,4 +82,14 @@ class Randomize:
 
         desc = " ".join(desc)
 
-        return desc 
+        return desc
+
+def get_url(path):
+    split_path = path.split("/")
+
+    # tricky.lol gives the filepath of the perk, and the name is "iconPerks_<name>"
+    # nightlight.gg urls do not include the "iconPerks_" part
+    icon_name = split_path.pop().split("_")[1]
+
+    # nightlight urls also do not include the "UI/icons" at the beginning of the filepath
+    return "/".join(split_path[2:]) + "/" + icon_name
