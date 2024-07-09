@@ -5,7 +5,7 @@ import re
 class Randomize:
     __slots__ = ["name", "description", "usage", "num_args", "DBD", "UTILS"]
 
-    NIGHTLIGHT_URL = "https://cdn.nightlight.gg/img/"
+    NIGHTLIGHT_URL = "https://cdn.nightlight.gg/img/perks/"
 
     def __init__(self, DBD, UTILS):
         self.name = "randomize"
@@ -63,7 +63,6 @@ class Randomize:
             embed_list.append(embed)
 
         response[2] = embed_list
-        print(response)
         return response
     
     def cleanup_description(self, desc, tunables):
@@ -92,6 +91,8 @@ def get_url(path):
     # tricky.lol gives the filepath of the perk, and the name is "iconPerks_<name>"
     # nightlight.gg urls do not include the "iconPerks_" part
     icon_name = split_path.pop().split("_")[1]
+    # nightlight perks are in camelcase
+    icon_name[0] = icon_name[0].lower()
 
     # nightlight urls also do not include the "UI/icons" at the beginning of the filepath
-    return Randomize.NIGHTLIGHT_URL + "/".join(split_path[2:]) + "/" + icon_name
+    return Randomize.NIGHTLIGHT_URL + "/".join(split_path[3:]) + "/" + icon_name
