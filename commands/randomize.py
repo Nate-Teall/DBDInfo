@@ -92,6 +92,7 @@ def get_url(path):
     # nightlight.gg urls do not include the "iconPerks_" part
     icon_name = split_path.pop().split("_").pop()
     # nightlight perks are in camelcase
+    # BUT sometimes they arent... NIGHTLIGHT IS NOT RELIABLE RAHHHHH
     icon_name = icon_name[:1].lower() + icon_name[1:]
 
     # nightlight urls also do not include the "UI/icons" at the beginning of the filepath
