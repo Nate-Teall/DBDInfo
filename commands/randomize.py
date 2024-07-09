@@ -1,4 +1,4 @@
-from discord import Embed, File
+from discord import Embed, File, errors.HTTPException
 import re
 
 # Returns a set of random perks for either killer or survivor
@@ -58,7 +58,10 @@ class Randomize:
             except FileNotFoundError:
                 print("Missing perk icon for:", perk["name"], " . Might need to download new icons") """
 
-            embed.set_thumbnail(url="icon_url")
+            try:
+                embed.set_thumbnail(url=icon_url)
+            except HTTPException:
+                print("Failed to get icon image with url:", icon_url)
 
             embed_list.append(embed)
 
