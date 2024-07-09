@@ -90,7 +90,7 @@ def get_url(path):
 
     # tricky.lol gives the filepath of the perk, and the name is "iconPerks_<name>"
     # nightlight.gg urls do not include the "iconPerks_" part
-    icon_name = split_path.pop().split("_")[1]
+    icon_name = split_path.pop().split("_").pop()
     # nightlight perks are in camelcase
     icon_name = icon_name[:1].lower() + icon_name[1:]
 
