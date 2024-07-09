@@ -50,6 +50,8 @@ class Randomize:
             icon_path = perk["image"]
             icon_url = get_url(icon_path)
 
+            print("Using url:", icon_url)
+
             """ icon_name = icon_path.split("/").pop()
             try:
                 file = File(icon_path, filename=icon_name)
@@ -66,7 +68,7 @@ class Randomize:
             embed_list.append(embed)
 
         response[2] = embed_list
-        #response[3] = file_list
+        print(response)
         return response
     
     def cleanup_description(self, desc, tunables):
