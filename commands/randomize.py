@@ -94,4 +94,4 @@ def get_url(path):
     icon_name = split_path.pop().split("_")[1]
 
     # nightlight urls also do not include the "UI/icons" at the beginning of the filepath
-    return randomize.NIGHTLIGHT_URL + "/".join(split_path[2:]) + "/" + icon_name
+    return Randomize.NIGHTLIGHT_URL + "/".join(split_path[2:]) + "/" + icon_name
