@@ -9,8 +9,8 @@ class Randomize:
 
     def __init__(self, DBD, UTILS):
         self.name = "randomize"
-        self.description = "Gives a random perk set for survivor or killer, use -d to include descriptions"
-        self.usage = "-randomize < killer | survivor > [-d]"
+        self.description = "Gives a random set of 1-4 perks for survivor or killer, use -d to include descriptions"
+        self.usage = "-randomize < killer | survivor > [# of perks] [-d]"
         self.num_args = 2
 
         self.DBD = DBD
@@ -19,8 +19,13 @@ class Randomize:
     def run(self, args):
         response = [None, None, None, None]
 
-        # Check if the user wants the perk descriptions included
-        include_descriptions = len(args) > 2 and "d" in args[2]
+        # Check optional arguments 
+        optional_args = args[2:]
+        include_descriptions = "-d" in optional_args
+
+        num_perks = int(optional_args[0]) if len(optional_args) > 0 and optional_args[0].isnumeric() else 4
+        if num_perks < 1 or num_perks > 4:
+            num_perks = 4
 
         if args[1].startswith("s"):
             perks = self.DBD.randomize("survivor")
@@ -36,10 +41,14 @@ class Randomize:
             response[0] = "Please specify 'survivor' or 'killer' \n\tUsage: " + self.usage
             return response
 
+        # perks.values() gives a view, we must cast it to a list
+        perks = list(perks.values())
         
         embed_list = []
 
-        for perk in perks.values():
+        for i in range(num_perks):
+            perk = perks[i]
+
             embed = Embed(title=perk["name"], color=embed_color)
             embed.set_author(name=title, icon_url=self.UTILS.pfp_url)
 
@@ -49,16 +58,8 @@ class Randomize:
             icon_path = perk["image"]
             icon_url = get_url(icon_path)
 
-            print("Using url:", icon_url)
+            #print("Using url:", icon_url)
             embed.set_thumbnail(url=icon_url)
-
-            """ icon_name = icon_path.split("/").pop()
-            try:
-                file = File(icon_path, filename=icon_name)
-                embed.set_thumbnail(url="attachment://" + icon_name)
-                file_list.append(file)
-            except FileNotFoundError:
-                print("Missing perk icon for:", perk["name"], " . Might need to download new icons") """
 
             embed_list.append(embed)
 
