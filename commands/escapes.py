@@ -29,7 +29,7 @@ class Escapes:
             tricky_data = self.DBD.get_player_data(player_id)
 
         except ValueError:
-            response[0] = "Player with ID or vanity URL: " + args[1] + " not found!"
+            response[0] = "Player with ID or vanity URL: " + args[1] + " not found! User may not have played DBD previously."
             return response
 
         # Unsure if this first stat is TOTAL escapes for escapes while healthy/injured

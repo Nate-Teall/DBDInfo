@@ -57,7 +57,7 @@ class Stats:
         
         except ValueError:
             # If the given argument still doesn't work, abort
-            response[0] = "Player with ID or vanity URL: " + args[1] + " not found!"
+            response[0] = "Player with ID or vanity URL: " + args[1] + " not found! User may not have played DBD previously."
             return response
 
         # Overview includes: total BP, playtime, Most BP on a single char, grades, ach. progress

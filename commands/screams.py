@@ -28,6 +28,6 @@ class Screams:
             response[0] = "Yikes! " + display_name + " has screamed " + str(scream_count) + " times! :scream:"
 
         except ValueError:
-            response[0] = "Player with ID or vanity URL: " + args[1] + " not found!"
+            response[0] = "Player with ID or vanity URL: " + args[1] + " not found! User may not have played DBD previously."
         
         return response

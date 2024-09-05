@@ -27,7 +27,7 @@ class Killer:
             player_stats = self.STEAM.get_dbd_data(player_id)
 
         except ValueError:
-            response[0] = "Player with ID or vanity URL: " + args[1] + " not found!"
+            response[0] = "Player with ID or vanity URL: " + args[1] + " not found! User may not have played DBD previously."
             return response
         
         # Killer overview includes: kills by hook, kills by mori or similar, matches won before the last gen repaired, survivors hooked in basement, survivors grabbed off gens, hatches closed
