@@ -33,9 +33,10 @@ class DBDInfoClient(discord.Client):
         UTILS.set_pfp_url(self.user.display_avatar.url)
 
     async def on_message(self, message):
+        text = message.content
 
-        if message.content.startswith("-"):
-            args = message.content.split()
+        if text.startswith("-") and len(text) > 1 and text[1].isalpha():
+            args = text.split()
             arg_count = len(args)
             response = [None, None, None, None]
 

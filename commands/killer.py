@@ -5,7 +5,7 @@ class Killer:
     def __init__(self, STEAM, UTILS):
         self.name = "killer"
         self.description = "Gives more detailed stats about a player's killer games"
-        self.usage = "-survivor <steam-vanity-url>"
+        self.usage = "-survivor <steamID | steam-vanity-url>"
         self.num_args = 2
 
         self.STEAM = STEAM
@@ -15,15 +15,19 @@ class Killer:
         response = [None, None, None, None]
 
         try:
-            vanity_url = args[1]
-            player_id = self.STEAM.get_steam_id_64(vanity_url)
+            player_id = self.STEAM.get_steam_id_64(args[1])
+        except ValueError:
+            player_id = args[1]
 
-            player_pfp_url = self.STEAM.get_pfp_url(player_id)
+        try:
+            player_summary = self.STEAM.get_player_summary(player_id)
+            display_name = player_summary["personaname"]
+            player_pfp_url = player_summary["avatarfull"]
 
             player_stats = self.STEAM.get_dbd_data(player_id)
 
         except ValueError:
-            response[0] = "Player: " + vanity_url + " not found!"
+            response[0] = "Player with ID or vanity URL: " + args[1] + " not found!"
             return response
         
         # Killer overview includes: kills by hook, kills by mori or similar, matches won before the last gen repaired, survivors hooked in basement, survivors grabbed off gens, hatches closed
@@ -34,7 +38,7 @@ class Killer:
         hatches_closed = player_stats["DBD_Chapter13_Slasher_Stat1"] if "DBD_Chapter13_Slasher_Stat1" in player_stats else 0
 
         embed = self.UTILS.make_embed(self.UTILS.Color.KILLER)
-        embed.title = "Killer stats for: " + vanity_url
+        embed.title = "Killer stats for: " + display_name
         embed.set_thumbnail(url=player_pfp_url)
 
         embed.add_field(

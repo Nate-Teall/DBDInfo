@@ -25,7 +25,7 @@ class SteamApi:
 
         return data["steamid"]
     
-    def get_pfp_url(self, player_id):
+    def get_player_summary(self, player_id):
         response = requests.get(self.GET_PLAYER_SUMMARIES + "&steamids=" + player_id)
         data = json.loads(response.text)["response"]["players"]
 
@@ -36,7 +36,7 @@ class SteamApi:
             print("Error getting profile url for user:", player_id)
             raise ValueError
         
-        return data[0]["avatarfull"]
+        return data[0]
     
     def get_dbd_data(self, player_id):
         response = requests.get(self.GET_STATS_FOR_GAME + "&steamid=" + player_id)

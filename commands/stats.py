@@ -30,7 +30,7 @@ class Stats:
     def __init__(self, STEAM, UTILS):
         self.name = "stats"
         self.description = "Gives general information about a player, including playtime, level, grades, and more"
-        self.usage = "-stats <steam-vanity-url>"
+        self.usage = "-stats <steamID | steam-vanity-url>"
         self.num_args = 2
 
         self.STEAM = STEAM
@@ -39,18 +39,25 @@ class Stats:
     def run(self, args):
         response = [None, None, None, None]
 
+        # First, try turning the given argument into an ID, assuming it is a vanity url
         try:
-            vanity_url = args[1]
-            player_id = self.STEAM.get_steam_id_64(vanity_url)
+            player_id = self.STEAM.get_steam_id_64(args[1])
+        except ValueError:
+            # If that doesn't work, we will assume the user gave a valid steam ID
+            player_id = args[1]
 
-            player_pfp_url = self.STEAM.get_pfp_url(player_id)
+        try:
+            player_summary = self.STEAM.get_player_summary(player_id)
+            display_name = player_summary["personaname"]
+            player_pfp_url = player_summary["avatarfull"]
 
             playtime = self.STEAM.get_dbd_playtime(player_id)
 
             player_stats = self.STEAM.get_dbd_data(player_id)
         
         except ValueError:
-            response[0] = "Player: " + vanity_url + " not found!"
+            # If the given argument still doesn't work, abort
+            response[0] = "Player with ID or vanity URL: " + args[1] + " not found!"
             return response
 
         # Overview includes: total BP, playtime, Most BP on a single char, grades, ach. progress
@@ -62,7 +69,7 @@ class Stats:
         surv_pip = player_stats["DBD_CamperSkulls"] if "DBD_CamperSkulls" in player_stats else 0
 
         embed = self.UTILS.make_embed(self.UTILS.Color.NEUTRAL)
-        embed.title = "Overview for: " + vanity_url
+        embed.title = "Overview for: " + display_name
         embed.set_thumbnail(url=player_pfp_url)
         embed.add_field(name="Playtime:", value=str(round(playtime/60, 1)) + " hours")
 
