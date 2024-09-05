@@ -55,6 +55,7 @@ class SteamApi:
             print("Error getting Steam playtime for user:", player_id)
             raise ValueError
         
+        #TODO: This line might be causing a key error with "games"
         games = json.loads(response.text)["response"]["games"]
 
         for game in games:

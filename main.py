@@ -19,7 +19,7 @@ class DBDInfoClient(discord.Client):
     commands = {
         "-stats":Stats(STEAM, UTILS),
         "-screams":Screams(STEAM),
-        "-escapes":Escapes(STEAM, UTILS),
+        "-escapes":Escapes(STEAM, DBD, UTILS),
         "-randomize":Randomize(DBD, UTILS)
     }
 

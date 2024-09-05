@@ -2,7 +2,7 @@
 class Escapes:
     __slots__ = ["name", "description", "usage", "num_args", "DBD", "STEAM", "UTILS"]
 
-    def __init__(self, STEAM, UTILS):
+    def __init__(self, STEAM, DBD, UTILS):
         self.name = "escapes"
         self.description = "Gives information about the number of times a player has escaped the trial"
         self.usage = "-escapes <steam-vanity-url>"
@@ -10,6 +10,7 @@ class Escapes:
 
         self.STEAM = STEAM
         self.UTILS = UTILS
+        self.DBD = DBD
 
     def run(self, args):
         response = [None, None, None, None]
@@ -21,15 +22,18 @@ class Escapes:
 
             steam_data = self.STEAM.get_dbd_data(player_id)
             player_stats = { stat["name"]:stat["value"] for stat in steam_data["stats"] }
+            tricky_data = self.DBD.get_player_data(player_id)
 
             # Unsure if this first stat is TOTAL escapes for escapes while healthy/injured
             escapes = player_stats["DBD_Escape"] if "DBD_Escape" in player_stats else 0
             escapes_ko = player_stats["DBD_EscapeKO"] if "DBD_EscapeKO" in player_stats else 0
             escapes_hatch = player_stats["DBD_EscapeThroughHatch"] if "DBD_EscapeThroughHatch" in player_stats else 0
+            escaped_newitem = tricky_data["escaped_newitem"]
 
             embed_desc = "Escapes while healthy/injured: " + str(escapes) + "\n"\
                          "Escapes through hatch: " + str(escapes_hatch) + "\n"\
                          "Escapes while downed: " + str(escapes_ko) + "\n"\
+                         "Escapes with another player's item: " + str(escaped_newitem) + "\n"
                                      
             embed = self.UTILS.make_embed(self.UTILS.Color.SURVIVOR)
             embed.title = "Survivor escapes for " + vanity_url

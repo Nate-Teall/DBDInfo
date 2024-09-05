@@ -51,47 +51,48 @@ class Stats:
             # Steam gives the data as a list of key/value pairs, so it must be converted into a dictionary
             steam_data = self.STEAM.get_dbd_data(player_id)
             player_stats = { stat["name"]:stat["value"] for stat in steam_data["stats"] }
-
-            # I have to add this extra "if" because if a stat is 0, then it simply doesn't appear in the response
-            total_bp = player_stats["DBD_BloodwebPoints"] if "DBD_BloodwebPoints" in player_stats else 0
-            most_bp = player_stats["DBD_MaxBloodwebPointsOneCategory"] if "DBD_MaxBloodwebPointsOneCategory" in player_stats else 0
-            ach = len(steam_data["achievements"])
-            killer_pip = player_stats["DBD_KillerSkulls"] if "DBD_KillerSkulls" in player_stats else 0
-            surv_pip = player_stats["DBD_CamperSkulls"] if "DBD_CamperSkulls" in player_stats else 0
-
-            embed = self.UTILS.make_embed(self.UTILS.Color.NEUTRAL)
-            embed.title = "Overview for: " + vanity_url
-            embed.set_thumbnail(url=player_pfp_url)
-            embed.add_field(name="Playtime:", value=str(round(playtime/60, 1)) + " hours")
-
-            bp_str = f'{total_bp:,}' 
-            embed.add_field(name="Total Bloodpoints:", value=bp_str)
-
-            most_bp_str = f'{most_bp:,}'
-            embed.add_field(name="Most BP Spent on one character:", value=most_bp_str)
-
-            ach_pct = str( round((ach / Stats.total_achievements) * 100, 2) )
-            embed.add_field(
-                name="Achievements:", 
-                value=str(ach) + " / " + str(Stats.total_achievements) + " (" + ach_pct + "%)",
-                inline=True)
-                        
-            surv_grade, surv_remainder = self.calculate_rank(surv_pip)
-            embed.add_field(
-                name="Survivor Grade:",
-                value=surv_grade + ", " + surv_remainder + " pips",
-                inline=True)
-                        
-            killer_grade, killer_remainer = self.calculate_rank(killer_pip)
-            embed.add_field(
-                name="Killer Grade:",
-                value=killer_grade + ", " + killer_remainer + " pips",
-                inline=True)
-                        
-            response[1] = embed
-
+        
         except ValueError:
             response[0] = "Player: " + vanity_url + " not found!"
+            return response
+
+        # I have to add this extra "if" because if a stat is 0, then it simply doesn't appear in the response
+        total_bp = player_stats["DBD_BloodwebPoints"] if "DBD_BloodwebPoints" in player_stats else 0
+        most_bp = player_stats["DBD_MaxBloodwebPointsOneCategory"] if "DBD_MaxBloodwebPointsOneCategory" in player_stats else 0
+        ach = len(steam_data["achievements"])
+        killer_pip = player_stats["DBD_KillerSkulls"] if "DBD_KillerSkulls" in player_stats else 0
+        surv_pip = player_stats["DBD_CamperSkulls"] if "DBD_CamperSkulls" in player_stats else 0
+
+        embed = self.UTILS.make_embed(self.UTILS.Color.NEUTRAL)
+        embed.title = "Overview for: " + vanity_url
+        embed.set_thumbnail(url=player_pfp_url)
+        embed.add_field(name="Playtime:", value=str(round(playtime/60, 1)) + " hours")
+
+        bp_str = f'{total_bp:,}' 
+        embed.add_field(name="Total Bloodpoints:", value=bp_str)
+
+        most_bp_str = f'{most_bp:,}'
+        embed.add_field(name="Most BP Spent on one character:", value=most_bp_str)
+
+        ach_pct = str( round((ach / Stats.total_achievements) * 100, 2) )
+        embed.add_field(
+            name="Achievements:", 
+            value=str(ach) + " / " + str(Stats.total_achievements) + " (" + ach_pct + "%)",
+            inline=True)
+                    
+        surv_grade, surv_remainder = self.calculate_rank(surv_pip)
+        embed.add_field(
+            name="Survivor Grade:",
+            value=surv_grade + ", " + surv_remainder + " pips",
+            inline=True)
+                    
+        killer_grade, killer_remainer = self.calculate_rank(killer_pip)
+        embed.add_field(
+            name="Killer Grade:",
+            value=killer_grade + ", " + killer_remainer + " pips",
+            inline=True)
+                    
+        response[1] = embed
 
         return response
     
