@@ -20,8 +20,7 @@ class Escapes:
             player_id = self.STEAM.get_steam_id_64(vanity_url)
             player_pfp_url = self.STEAM.get_pfp_url(player_id)
 
-            steam_data = self.STEAM.get_dbd_data(player_id)
-            player_stats = { stat["name"]:stat["value"] for stat in steam_data["stats"] }
+            player_stats = self.STEAM.get_dbd_data(player_id)
             tricky_data = self.DBD.get_player_data(player_id)
 
             # Unsure if this first stat is TOTAL escapes for escapes while healthy/injured

@@ -9,6 +9,7 @@ from commands.screams import Screams
 from commands.escapes import Escapes
 from commands.stats import Stats
 from commands.randomize import Randomize
+from commands.survivor import Survivor
 
 DBD = DbdApi()
 STEAM = SteamApi()
@@ -18,9 +19,10 @@ class DBDInfoClient(discord.Client):
 
     commands = {
         "-stats":Stats(STEAM, UTILS),
-        "-screams":Screams(STEAM),
+        "-survivor":Survivor(STEAM, UTILS),
         "-escapes":Escapes(STEAM, DBD, UTILS),
-        "-randomize":Randomize(DBD, UTILS)
+        "-randomize":Randomize(DBD, UTILS),
+        "-screams":Screams(STEAM),
     }
 
     async def on_ready(self):

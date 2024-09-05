@@ -46,7 +46,12 @@ class SteamApi:
             raise ValueError
         
         data = json.loads(response.text)["playerstats"]
-        return data
+
+        # Steam gives the data as a list of key/value pairs, so it must be converted into a single dictionary
+        data_dict = { stat["name"]:stat["value"] for stat in data["stats"] }
+        # Add the number of the achievements the player has to this dictionary
+        data_dict["achievements"] = len(data["achievements"])
+        return data_dict
     
     def get_dbd_playtime(self, player_id):
         response = requests.get(self.GET_OWNED_GAMES + "&steamid=" + player_id)

@@ -17,8 +17,7 @@ class Screams:
             vanity_url = args[1]
             player_id = self.STEAM.get_steam_id_64(vanity_url)
 
-            steam_data = self.STEAM.get_dbd_data(player_id)
-            player_stats = { stat["name"]:stat["value"] for stat in steam_data["stats"] }
+            player_stats = self.STEAM.get_dbd_data(player_id)
             scream_count = player_stats["DBD_Camper38_Stat2"] if "DBD_Camper38_Stat2" in player_stats else 0
 
             response[0] = "Yikes! " + vanity_url + " has screamed " + str(scream_count) + " times! :scream:"

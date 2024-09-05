@@ -39,7 +39,6 @@ class Stats:
     def run(self, args):
         response = [None, None, None, None]
 
-        # Overview includes: total BP, playtime, Most BP on a single char, grades, ach. progress
         try:
             vanity_url = args[1]
             player_id = self.STEAM.get_steam_id_64(vanity_url)
@@ -48,18 +47,17 @@ class Stats:
 
             playtime = self.STEAM.get_dbd_playtime(player_id)
 
-            # Steam gives the data as a list of key/value pairs, so it must be converted into a dictionary
-            steam_data = self.STEAM.get_dbd_data(player_id)
-            player_stats = { stat["name"]:stat["value"] for stat in steam_data["stats"] }
+            player_stats = self.STEAM.get_dbd_data(player_id)
         
         except ValueError:
             response[0] = "Player: " + vanity_url + " not found!"
             return response
 
+        # Overview includes: total BP, playtime, Most BP on a single char, grades, ach. progress
         # I have to add this extra "if" because if a stat is 0, then it simply doesn't appear in the response
         total_bp = player_stats["DBD_BloodwebPoints"] if "DBD_BloodwebPoints" in player_stats else 0
         most_bp = player_stats["DBD_MaxBloodwebPointsOneCategory"] if "DBD_MaxBloodwebPointsOneCategory" in player_stats else 0
-        ach = len(steam_data["achievements"])
+        ach = player_stats["achievements"]
         killer_pip = player_stats["DBD_KillerSkulls"] if "DBD_KillerSkulls" in player_stats else 0
         surv_pip = player_stats["DBD_CamperSkulls"] if "DBD_CamperSkulls" in player_stats else 0
 
