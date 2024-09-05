@@ -70,7 +70,7 @@ class Stats:
         embed.add_field(name="Total Bloodpoints:", value=bp_str)
 
         most_bp_str = f'{most_bp:,}'
-        embed.add_field(name="Most BP Spent on one character:", value=most_bp_str)
+        embed.add_field(name="Most BP Spent on One Character:", value=most_bp_str)
 
         ach_pct = str( round((ach / Stats.total_achievements) * 100, 2) )
         embed.add_field(
@@ -84,10 +84,10 @@ class Stats:
             value=surv_grade + ", " + surv_remainder + " pips",
             inline=True)
                     
-        killer_grade, killer_remainer = self.calculate_rank(killer_pip)
+        killer_grade, killer_remainder = self.calculate_rank(killer_pip)
         embed.add_field(
             name="Killer Grade:",
-            value=killer_grade + ", " + killer_remainer + " pips",
+            value=killer_grade + ", " + killer_remainder + " pips",
             inline=True)
                     
         response[1] = embed
