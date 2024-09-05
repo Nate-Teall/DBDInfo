@@ -3,7 +3,7 @@ class Stats:
     __slots__ = ["name", "description", "usage", "num_args", "STEAM", "UTILS"]
     
     # This shouldn't be hard coded, I will find a way to get the total number of achievements from steam.
-    total_achievements = 255
+    total_achievements = 264
     grade_strings = [
         "Ash IV",
         "Ash III",
