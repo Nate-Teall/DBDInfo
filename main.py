@@ -10,6 +10,7 @@ from commands.escapes import Escapes
 from commands.stats import Stats
 from commands.randomize import Randomize
 from commands.survivor import Survivor
+from commands.killer import Killer
 
 DBD = DbdApi()
 STEAM = SteamApi()
@@ -21,6 +22,7 @@ class DBDInfoClient(discord.Client):
         "-stats":Stats(STEAM, UTILS),
         "-survivor":Survivor(STEAM, UTILS),
         "-escapes":Escapes(STEAM, DBD, UTILS),
+        "-killer":Killer(STEAM, UTILS),
         "-randomize":Randomize(DBD, UTILS),
         "-screams":Screams(STEAM),
     }

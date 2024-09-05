@@ -11,7 +11,6 @@ class CommandUtils:
         KILLER = 0xff4040
         NEUTRAL = 0xe252ff
 
-
     def set_pfp_url(self, pfp_url):
         self.pfp_url = pfp_url
 
